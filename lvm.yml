@@ -1,0 +1,26 @@
+---
+ - hosts: 192.168.40.146
+   user: root
+   tasks:
+     - name: vg create
+       lvg:
+          vg: vg0
+          pvs: /dev/sdb1,/dev/sdb2
+                
+     - name: lv create 
+       lvol:
+           vg: vg0
+           lv: lv0
+           size: 1G
+                        
+     - name: create file system ext4
+       filesystem:
+            fstype: ext4
+            dev: /dev/vg0/lv0
+
+     - name: mount logical volume
+       mount:
+             name: /data
+             src: /dev/vg0/lv0
+             fstype: ext4
+             state: mounted
